@@ -66,12 +66,12 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 MAGIC = b"\xef\x01"
 FORMAT_VERSION = 1
 
-NONCE_SIZE = 12           # AES-GCM standard nonce size in bytes
-SALT_SIZE = 16            # PBKDF2 salt size in bytes
-GCM_TAG_SIZE = 16         # AES-GCM authentication tag size in bytes
+NONCE_SIZE = 12    # AES-GCM standard nonce size in bytes
+SALT_SIZE = 16     # PBKDF2 salt size in bytes
+GCM_TAG_SIZE = 16  # AES-GCM authentication tag size in bytes
 
-DEFAULT_CHUNK_SIZE = 2**20         # 1 MiB
-DEFAULT_SPLIT_SIZE = 2**30         # 1 GiB
+DEFAULT_CHUNK_SIZE = 2**20  # 1 MiB
+DEFAULT_SPLIT_SIZE = 2**30  # 1 GiB
 DEFAULT_KDF_ITERATIONS = 1_200_000
 
 # ── Compression algorithm configuration ──────────────────────────────────────
@@ -203,13 +203,11 @@ def _get_part_paths(base_path: str) -> list[str]:
     candidates = glob.glob(f"{glob.escape(base_path)}.part*")
     valid: list[tuple[int, str]] = []
     for p in candidates:
-        suffix = p[len(base_path) + 5:]  # strip ".part"
+        suffix = p[len(base_path) + 5 :]  # strip ".part"
         if suffix.isdigit():
             valid.append((int(suffix), p))
     if not valid:
-        raise FileNotFoundError(
-            f"No part files found matching '{base_path}.part*'"
-        )
+        raise FileNotFoundError(f"No part files found matching '{base_path}.part*'")
     valid.sort(key=lambda t: t[0])
     return [p for _, p in valid]
 
@@ -319,8 +317,7 @@ class _SplitFileReader:
             data = self._f.read(chunk_len)
             if len(data) != chunk_len:
                 raise ValueError(
-                    f"Truncated chunk: expected {chunk_len} bytes, "
-                    f"got {len(data)}."
+                    f"Truncated chunk: expected {chunk_len} bytes, got {len(data)}."
                 )
             self._bytes_read += 4 + chunk_len
             yield data
@@ -382,7 +379,9 @@ def _progress_bar(
 
     print(
         f"\r{label}: |{bar}| {pct:5.1f}% ({suffix})",
-        end="", flush=True, file=sys.stderr,
+        end="",
+        flush=True,
+        file=sys.stderr,
     )
 
 
@@ -939,7 +938,9 @@ def build_parser() -> argparse.ArgumentParser:
     # Shared flags inherited by all subcommands.
     shared = argparse.ArgumentParser(add_help=False)
     shared.add_argument(
-        "-v", "--verbose", action="store_true",
+        "-v",
+        "--verbose",
+        action="store_true",
         help="Show progress bars and status messages.",
     )
 
@@ -963,89 +964,118 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
-        "-V", "--version", action="version",
+        "-V",
+        "--version",
+        action="version",
         version=f"%(prog)s {__version__}",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
     # ── encrypt ──────────────────────────────────────────────────────────
     enc = sub.add_parser(
-        "encrypt", parents=[shared],
+        "encrypt",
+        parents=[shared],
         help="Encrypt files or directories.",
     )
     enc.add_argument(
-        "-i", "--input", nargs="+", required=True,
+        "-i",
+        "--input",
+        nargs="+",
+        required=True,
         help="Input file(s) or directories to encrypt.",
     )
     enc.add_argument(
-        "-o", "--output", required=True,
+        "-o",
+        "--output",
+        required=True,
         help="Output base filename (.partN suffixes added when splitting).",
     )
     enc.add_argument(
-        "--password", default=None,
+        "--password",
+        default=None,
         help="Password (prompted securely if omitted).",
     )
     enc.add_argument(
-        "--file-only", action="store_true",
+        "--file-only",
+        action="store_true",
         help="Encrypt a single file directly (skip tar archiving).",
     )
     enc.add_argument(
-        "--algorithm", choices=["xz", "gz", "bz2", "zst", "none"],
+        "--algorithm",
+        choices=["xz", "gz", "bz2", "zst", "none"],
         default=DEFAULT_ALGORITHM,
         help="Compression algorithm (default: %(default)s). "
-             "'zst' requires Python ≥ 3.14.",
+        "'zst' requires Python ≥ 3.14.",
     )
     enc.add_argument(
-        "--compression-level", type=int, default=None, metavar="N",
+        "--compression-level",
+        type=int,
+        default=None,
+        metavar="N",
         help="Compression level (algorithm-specific). "
-             "None uses the algorithm's default.",
+        "None uses the algorithm's default.",
     )
     enc.add_argument(
-        "--chunk-size", type=_parse_size, default=DEFAULT_CHUNK_SIZE,
+        "--chunk-size",
+        type=_parse_size,
+        default=DEFAULT_CHUNK_SIZE,
         help="Plaintext chunk size (default: 1MiB). Accepts: KiB, MiB, GiB.",
     )
     enc.add_argument(
-        "--split-size", type=_parse_size, default=DEFAULT_SPLIT_SIZE,
+        "--split-size",
+        type=_parse_size,
+        default=DEFAULT_SPLIT_SIZE,
         help="Max part-file size (default: 1GiB). Accepts: KiB, MiB, GiB.",
     )
     enc.add_argument(
-        "--no-split", action="store_true",
+        "--no-split",
+        action="store_true",
         help="Write a single output file (disable splitting).",
     )
     enc.add_argument(
-        "--cleanup", action="store_true",
+        "--cleanup",
+        action="store_true",
         help="Remove original input(s) after successful encryption.",
     )
 
     # ── decrypt ──────────────────────────────────────────────────────────
     dec = sub.add_parser(
-        "decrypt", parents=[shared],
+        "decrypt",
+        parents=[shared],
         help="Decrypt files or directories.",
     )
     dec.add_argument(
-        "-i", "--input", required=True,
+        "-i",
+        "--input",
+        required=True,
         help="Encrypted file or base name for split parts.",
     )
     dec.add_argument(
-        "-o", "--output", required=True,
+        "-o",
+        "--output",
+        required=True,
         help="Output file (--file-only) or directory for extracted content.",
     )
     dec.add_argument(
-        "--password", default=None,
+        "--password",
+        default=None,
         help="Password (prompted securely if omitted).",
     )
     dec.add_argument(
-        "--file-only", action="store_true",
+        "--file-only",
+        action="store_true",
         help="Decrypt to a single file (skip decompression/extraction).",
     )
     dec.add_argument(
-        "--cleanup", action="store_true",
+        "--cleanup",
+        action="store_true",
         help="Remove encrypted input(s) after successful decryption.",
     )
 
     # ── compare ─────────────────────────────────────────────────────────
     cmp = sub.add_parser(
-        "compare", parents=[shared],
+        "compare",
+        parents=[shared],
         help="Recursively compare two directories.",
     )
     cmp.add_argument(
