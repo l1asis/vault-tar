@@ -123,6 +123,11 @@ Each chunk uses a unique nonce derived as `base_nonce XOR chunk_index`
 See [SECURITY.md](SECURITY.md) for the threat model, cryptographic details,
 known limitations, and responsible disclosure policy.
 
+## Acknowledgments
+
+Built with assistance from [GitHub Copilot](https://github.com/features/copilot)
+(Claude Opus 4.6).
+
 ## License
 
 [MIT](LICENSE) — Copyright 2026 Volodymyr Horshenin
