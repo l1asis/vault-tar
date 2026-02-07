@@ -29,9 +29,6 @@ compression, and optional output splitting.
 
 ### From PyPI
 
-> [!WARNING]  
-> Installing from PyPI is not available yet. Please install from source until the first release.
-
 ```bash
 pip install vault-tar
 ```
