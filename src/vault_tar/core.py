@@ -1042,19 +1042,21 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         metavar="N",
         help="Compression level (algorithm-specific). "
-        "None uses the algorithm's default.",
+        "Uses the algorithm's default if omitted.",
     )
     enc.add_argument(
         "--chunk-size",
         type=_parse_size,
         default=DEFAULT_CHUNK_SIZE,
-        help="Plaintext chunk size (default: 1MiB). Accepts: KiB, MiB, GiB.",
+        help="Plaintext chunk size (default: 1MiB). "
+        "Accepts suffixes: B, KB, KiB, MB, MiB, GB, GiB, TB, TiB.",
     )
     enc.add_argument(
         "--split-size",
         type=_parse_size,
         default=DEFAULT_SPLIT_SIZE,
-        help="Max part-file size (default: 1GiB). Accepts: KiB, MiB, GiB.",
+        help="Max part-file size (default: 1GiB). "
+        "Accepts suffixes: B, KB, KiB, MB, MiB, GB, GiB, TB, TiB.",
     )
     enc.add_argument(
         "--no-split",
