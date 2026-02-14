@@ -95,7 +95,9 @@ vtar compare original/ restored/ -v
 | `--cleanup` | Remove original input after success |
 | `-V`, `--version` | Show version and exit |
 
-Sizes accept human-readable suffixes: `KiB`, `MiB`, `GiB`.
+Sizes accept human-readable suffixes: `KiB`, `MiB`, ... `TiB` 
+for binary units (default), as well as `KB`, `MB`, ... `TB`
+for decimal units.
 
 ## File format
 
